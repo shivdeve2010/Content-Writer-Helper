@@ -1,6 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types';
+import { useAuth0 } from "@auth0/auth0-react";
 export default function Navbar(props) {
+  const { loginWithRedirect } = useAuth0();
+  const { logout } = useAuth0();
+  const { user, isAuthenticated, isLoading } = useAuth0();
   return (
     <nav className="navbar navbar-expand-lg bg-light">
   <div className="container-fluid">
@@ -13,9 +17,31 @@ export default function Navbar(props) {
         <li className="nav-item">
           <a className="nav-link active" aria-current="page" href="/">Home</a>
         </li>
+        
+        
+        
         <li className="nav-item">
           <a className="nav-link active" aria-current="page" href="/">{props.aboutText}</a>
         </li>
+        <li>
+          {isAuthenticated && <p>
+            {user.name}
+            </p>}
+        </li>
+        {
+          isAuthenticated ? (
+            <li>
+            <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+          Log Out
+        </button>
+            </li>
+          ) : (
+            
+         <li>
+         <button onClick={() => loginWithRedirect()}>Log In</button>
+         </li>
+          )
+        }
       </ul>
       <form className="d-flex" role="search">
         <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
